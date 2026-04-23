@@ -1,110 +1,125 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
-const IMG_HERO = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/7c5f6c2e-9603-43a8-ae4d-51e06a299ec1.jpg";
-const IMG_BEER = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/38044e8e-708c-4975-a687-86a1053cf49f.jpg";
-const IMG_FOOD = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/a88dedaf-a079-447e-833f-588479991bb9.jpg";
+const IMG_HERO    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/476ebb68-793f-401c-8b35-f1ed2326f280.jpg";
+const IMG_QUIZ    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/c6a3eeae-2dd5-45d7-a59d-03b3f738e51b.jpg";
+const IMG_LUNCH   = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/bca8d078-bb24-4564-8504-af8729a79dde.jpg";
+const IMG_BARTEN  = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/5887ff69-8ac1-4993-9d52-eda1194c678a.jpg";
+const IMG_BEER    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/38044e8e-708c-4975-a687-86a1053cf49f.jpg";
+const IMG_FOOD    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/a88dedaf-a079-447e-833f-588479991bb9.jpg";
 
-type Section = "home" | "menu" | "booking" | "profile" | "news" | "contacts";
-type MenuTab = "beer" | "food" | "cocktails" | "soft";
+type Section = "home" | "menu" | "booking" | "about" | "news" | "contacts" | "lunch";
 
-const beerMenu = [
-  { name: "Пивоман Светлое", style: "Лагер · 4.8% · 0.5л", price: "220 ₽", tag: "Хит", desc: "Мягкое, освежающее. Золотистый цвет, лёгкая хмелевая горчинка", abv: 4.8, ibu: 18 },
-  { name: "Пивоман Тёмное", style: "Тёмный лагер · 5.2% · 0.5л", price: "240 ₽", tag: "", desc: "Насыщенный карамельно-солодовый вкус, тёмно-коричневый цвет", abv: 5.2, ibu: 25 },
-  { name: "Пивоман Пшеничное", style: "Вайцен · 5.0% · 0.5л", price: "250 ₽", tag: "Новинка", desc: "Мутное пшеничное, нотки банана и гвоздики", abv: 5.0, ibu: 12 },
-  { name: "Пивоман IPA", style: "India Pale Ale · 6.5% · 0.5л", price: "280 ₽", tag: "Крафт", desc: "Яркий тропический хоп-аромат, сухое горькое послевкусие", abv: 6.5, ibu: 55 },
-  { name: "Пивоман Стаут", style: "Стаут · 5.8% · 0.5л", price: "260 ₽", tag: "", desc: "Кофейные и шоколадные ноты, кремовая пена, бархатная текстура", abv: 5.8, ibu: 35 },
-  { name: "Сет «Пивоман»", style: "4 сорта × 0.3л", price: "520 ₽", tag: "Сет", desc: "Светлое + Тёмное + IPA + Пшеничное — попробуй все сорта", abv: 0, ibu: 0 },
+// ─── МЕНЮ-ФОРМАТЫ (реальные с сайта) ───────────────────────────────────────
+const menuFormats = [
+  {
+    id: "quiz",
+    title: "МЕНЮ-КВИЗ",
+    subtitle: "Каждое воскресенье · 18:00",
+    img: IMG_QUIZ,
+    color: "var(--neon-orange)",
+    desc: "Командная викторина за столом с едой и напитками. Побеждает самая эрудированная компания — победители получают призы от бара!",
+    includes: [
+      "Участие в викторине — бесплатно",
+      "Меню из закусок и основных блюд",
+      "Напитки по меню бара",
+      "Призы для победителей",
+    ],
+    note: "Регистрация команды обязательна. Звоните: +7 (960) 179-09-89",
+  },
+  {
+    id: "pati",
+    title: "МЕНЮ-ПАТИ",
+    subtitle: "Пятница и суббота · от 21:00",
+    img: IMG_BARTEN,
+    color: "var(--neon-pink)",
+    desc: "Вечеринка с бармен-шоу, танцами и авторской кухней. Профессиональные бармены устроят для вас незабываемое шоу прямо за стойкой.",
+    includes: [
+      "Бармен-шоу каждые выходные",
+      "Авторские коктейли от команды барменов",
+      "Яркое меню вечерних блюд",
+      "Танцпол и живая атмосфера",
+    ],
+    note: "Вход свободный при наличии брони столика",
+  },
+  {
+    id: "bezlimit",
+    title: "БЕЗЛИМИТ ПАТИ",
+    subtitle: "По предварительной брони",
+    img: IMG_BEER,
+    color: "var(--neon-cyan)",
+    desc: "Безлимитное угощение на фиксированное время — бери столько, сколько душе угодно. Идеально для корпоративов и дней рождения.",
+    includes: [
+      "Безлимитные напитки — 2 часа",
+      "Горячие закуски в комплекте",
+      "Персональный официант",
+      "Зарезервированная зона для компании",
+    ],
+    note: "Только по предварительному бронированию. Группы от 4 человек",
+  },
+  {
+    id: "speshl",
+    title: "СУПЕР СПЕШЛ",
+    subtitle: "Специальное предложение недели",
+    img: IMG_FOOD,
+    color: "var(--neon-orange)",
+    desc: "Еженедельное специальное предложение — уникальные блюда, авторские коктейли и особые условия только на этой неделе. Следи за обновлениями!",
+    includes: [
+      "Уникальное блюдо недели от шефа",
+      "Авторский коктейль в подарок",
+      "Специальная цена только эту неделю",
+      "Анонс каждую пятницу в соцсетях",
+    ],
+    note: "Акция действует ограниченное время. Уточняйте у персонала",
+  },
 ];
 
-const foodMenu = [
-  { name: "Куриные крылья", desc: "BBQ или остро-медовые, 6 шт", price: "390 ₽", tag: "Хит" },
-  { name: "Рыба & Чипсы", desc: "Треска в пивном кляре, картофель фри", price: "480 ₽", tag: "Хит" },
-  { name: "Бургер Пивоман", desc: "Двойная котлета, чеддер, бекон, фирменный соус", price: "550 ₽", tag: "" },
-  { name: "Колбаски гриль", desc: "Домашние, с горчицей и краутом", price: "420 ₽", tag: "" },
-  { name: "Сырные палочки", desc: "Хрустящие, соус ранч, 8 шт", price: "320 ₽", tag: "" },
-  { name: "Пивная тарелка", desc: "Крылья + колбаски + кольца + соусы. На компанию", price: "890 ₽", tag: "Для компании" },
+// ─── БИЗНЕС-ЛАНЧ ────────────────────────────────────────────────────────────
+const lunchMenu = [
+  { course: "Суп", items: ["Борщ со сметаной", "Куриный крем-суп", "Солянка мясная", "Уха из судака"] },
+  { course: "Горячее", items: ["Котлета по-киевски с пюре", "Паста карбонара", "Куриная грудка-гриль с овощами", "Свинина в соусе BBQ"] },
+  { course: "Салат", items: ["Цезарь с курицей", "Греческий", "Витаминный из свежих овощей", "Оливье"] },
+  { course: "Напиток", items: ["Чай / кофе / сок / морс"] },
 ];
 
-const cocktailMenu = [
-  { name: "Пивной шейк", desc: "Тёмное пиво, виски, мёд, лайм", price: "380 ₽", tag: "Подпись" },
-  { name: "Michelada", desc: "Светлое пиво, томатный сок, специи", price: "340 ₽", tag: "" },
-  { name: "Boilermaker", desc: "Виски + стакан крафтового IPA", price: "490 ₽", tag: "Классика" },
-  { name: "Beer Mojito", desc: "Ром, лайм, мята, сахар, светлое пиво", price: "360 ₽", tag: "" },
-  { name: "Whisky Sour", desc: "Бурбон, лимон, мёд, яичный белок", price: "420 ₽", tag: "" },
-  { name: "Radler", desc: "Пшеничное пиво, лимонад, мята — лёгкий вариант", price: "290 ₽", tag: "Лёгкий" },
+// ─── НОВОСТИ ─────────────────────────────────────────────────────────────────
+const news = [
+  { date: "27\nАПР", title: "Бизнес-ланч открыт!", desc: "В нашем ПМ|БАР появился вкусный бизнес-ланч. Комплексный обед по приятным ценам каждый день.", tag: "Новость", color: "var(--neon-orange)", img: IMG_LUNCH },
+  { date: "30\nАПР", title: "Бармен-шоу · выходные", desc: "Каждые выходные для вас работает команда профессиональных барменов. Незабываемое шоу прямо у стойки!", tag: "Событие", color: "var(--neon-pink)", img: IMG_BARTEN },
+  { date: "Еженед.", title: "Меню-Квиз", desc: "Командная викторина каждое воскресенье. Собирай команду и приходи побеждать!", tag: "Квиз", color: "var(--neon-cyan)", img: IMG_QUIZ },
 ];
 
-const softMenu = [
-  { name: "Домашний лимонад", desc: "Клубника, апельсин или огурец-базилик", price: "220 ₽", tag: "Хит" },
-  { name: "Имбирный эль", desc: "Свежий имбирь, лимон, мята, содовая", price: "200 ₽", tag: "" },
-  { name: "Морс брусничный", desc: "Свежий, без сахара", price: "180 ₽", tag: "" },
-  { name: "Кофе / Чай", desc: "Эспрессо, американо, латте / травяной, чёрный", price: "от 150 ₽", tag: "" },
+const reviews = [
+  { author: "Анна К.", text: "Меня удивила вежливость персонала, кухня и интерьер — всё на уровне! Персонал очень вежлив и деликатен.", stars: 5 },
+  { author: "Дмитрий Л.", text: "Наконец-то открылось крутое место в Нижнем! Теперь это моё любимое заведение! Руководству — респект!", stars: 5 },
+  { author: "Светлана М.", text: "Очень вкусная свежая еда по приемлемым ценам, хорошее обслуживание со стороны официантов. Спасибо вам большое.", stars: 5 },
+  { author: "Компания друзей", text: "Атмосферное место, приятная музыка, в помещении чисто, учтивый персонал, но главное — вкусная еда и доступные цены!", stars: 5 },
 ];
 
-const events = [
-  { date: "27\nАПР", title: "Пивной квиз", desc: "Командная викторина + 3 сорта пива победителям. Регистрация обязательна.", tag: "Квиз", color: "var(--neon-orange)" },
-  { date: "30\nАПР", title: "Живая музыка", desc: "Акустический вечер — кавер-группа «Вибрация». Вход свободный от заказа 500 ₽.", tag: "Музыка", color: "var(--neon-pink)" },
-  { date: "9\nМАЙ", title: "Безлимит Пати", desc: "2 часа безлимитного крафта + горячая закуска. Бронь обязательна.", tag: "Вечеринка", color: "var(--neon-cyan)" },
-  { date: "17\nМАЙ", title: "Мастер-класс", desc: "Варим крафт вместе с пивоваром — как создаётся наше Пшеничное. 6 мест.", tag: "МК", color: "var(--neon-orange)" },
-];
-
-const promos = [
-  { title: "Меню-Квиз", desc: "Каждое воскресенье в 18:00. Участие бесплатно — победитель пьёт бесплатно!", icon: "Trophy" },
-  { title: "Безлимит Пати", desc: "2 часа крафта без лимита + закуска — 990 ₽ с человека. Группы от 4 чел.", icon: "Beer" },
-  { title: "Happy Hour", desc: "Пиво −30% каждый будний день с 16:00 до 19:00. Все сорта на кране.", icon: "Clock" },
-  { title: "День рождения", desc: "Именинникам — бесплатная кружка фирменного светлого 0.5л в день рождения!", icon: "Cake" },
-  { title: "Пати VIP", desc: "VIP-стол, личный бармен, приоритет — от 4000 ₽. Идеально для компании.", icon: "Star" },
-  { title: "Супер Спешл", desc: "Акция каждой пятницы — следи в соцсетях. Всегда разные сюрпризы!", icon: "Zap" },
-];
-
-const myOrders = [
-  { id: "#4871", date: "19 апр", items: "Светлое ×3, Крылья, Колбаски", total: "1360 ₽", status: "Завершён" },
-  { id: "#4832", date: "12 апр", items: "Сет «Пивоман», Рыба & Чипсы", total: "1000 ₽", status: "Завершён" },
-];
-
-const myReservations = [
-  { id: "#R88", date: "27 апр, 18:00", guests: "6 чел", zone: "Основной зал", status: "Подтверждено" },
-];
-
-const TAG_STYLES: Record<string, string> = {
-  "Хит": "bg-primary/20 text-primary",
-  "Новинка": "bg-green-500/20 text-green-400",
-  "Крафт": "bg-cyan-500/20 text-cyan-400",
-  "Сет": "bg-purple-500/20 text-purple-400",
-  "Подпись": "bg-accent/20 text-accent",
-  "Классика": "bg-cyan-500/20 text-cyan-400",
-  "Лёгкий": "bg-green-500/20 text-green-400",
-  "Для компании": "bg-primary/20 text-primary",
-};
+const gallery = [IMG_HERO, IMG_QUIZ, IMG_LUNCH, IMG_BARTEN, IMG_BEER, IMG_FOOD];
 
 export default function Index() {
   const [section, setSection] = useState<Section>("home");
-  const [menuTab, setMenuTab] = useState<MenuTab>("beer");
+  const [activeFormat, setActiveFormat] = useState<string | null>(null);
   const [bDate, setBDate] = useState("");
   const [bTime, setBTime] = useState("");
   const [bGuests, setBGuests] = useState("2");
   const [bName, setBName] = useState("");
   const [bPhone, setBPhone] = useState("");
-  const [bZone, setBZone] = useState("Основной зал");
-  const [bComment, setBComment] = useState("");
   const [bSuccess, setBSuccess] = useState(false);
 
   const nav = [
-    { id: "home",     label: "Главная",  icon: "Home" },
-    { id: "menu",     label: "Меню",     icon: "UtensilsCrossed" },
-    { id: "booking",  label: "Бронь",    icon: "CalendarDays" },
-    { id: "news",     label: "Новости",  icon: "Newspaper" },
-    { id: "contacts", label: "Контакты", icon: "MapPin" },
-    { id: "profile",  label: "Кабинет",  icon: "User" },
+    { id: "home",     label: "Главная",       icon: "Home" },
+    { id: "about",    label: "О нас",         icon: "Info" },
+    { id: "menu",     label: "Меню",          icon: "UtensilsCrossed" },
+    { id: "lunch",    label: "Бизнес-ланч",   icon: "Coffee" },
+    { id: "news",     label: "Новости",       icon: "Newspaper" },
+    { id: "contacts", label: "Контакты",      icon: "MapPin" },
   ] as const;
 
-  const go = (s: Section) => setSection(s);
+  const go = (s: Section) => { setSection(s); setActiveFormat(null); };
 
-  const currentMenu = menuTab === "beer" ? beerMenu
-    : menuTab === "food" ? foodMenu
-    : menuTab === "cocktails" ? cocktailMenu
-    : softMenu;
+  const selectedFormat = menuFormats.find(f => f.id === activeFormat);
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden" style={{ fontFamily: "'Golos Text', sans-serif" }}>
@@ -113,17 +128,20 @@ export default function Index() {
       <header className="fixed top-0 inset-x-0 z-50 glass border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <button onClick={() => go("home")} className="flex items-center gap-2.5">
-            <span className="text-2xl">🍺</span>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-black text-sm text-primary-foreground"
+              style={{ background: "linear-gradient(135deg, #FF8C00, #FF3C7D)" }}>
+              ПМ
+            </div>
             <div className="leading-none">
-              <div className="font-display font-bold text-xl tracking-widest gradient-text">ПИВОМАН</div>
-              <div className="text-[9px] text-muted-foreground tracking-[0.25em] uppercase">крафт-бар · Челябинск</div>
+              <div className="font-display font-bold text-lg tracking-widest gradient-text">ПМ|БАР</div>
+              <div className="text-[9px] text-muted-foreground tracking-[0.2em] uppercase">Нижний Новгород</div>
             </div>
           </button>
 
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-0.5">
             {nav.map((item) => (
               <button key={item.id} onClick={() => go(item.id as Section)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   section === item.id
                     ? "bg-primary/20 text-primary border border-primary/30"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/5"
@@ -133,7 +151,13 @@ export default function Index() {
             ))}
           </nav>
 
-          <button className="relative p-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => go("booking" as Section)}
+            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+            <Icon name="CalendarDays" size={16} />
+            Забронировать
+          </button>
+
+          <button className="md:hidden relative p-2 text-muted-foreground hover:text-foreground transition-colors">
             <Icon name="Bell" size={20} />
             <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
           </button>
@@ -145,47 +169,52 @@ export default function Index() {
         {/* ── HOME ── */}
         {section === "home" && (
           <div className="animate-fade-in">
-            <section className="relative h-[90vh] min-h-[600px] flex items-center overflow-hidden">
+
+            {/* Hero */}
+            <section className="relative min-h-[92vh] flex items-center overflow-hidden">
               <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${IMG_HERO})` }} />
-              <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+
               <div className="relative z-10 max-w-6xl mx-auto px-4 w-full">
                 <div className="max-w-xl animate-slide-up">
                   <div className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs text-primary mb-6">
                     <span className="w-2 h-2 bg-primary rounded-full pulse-neon" />
-                    Открыто сегодня · до 03:00
+                    Открыто · Пн-Чт до 03:00 · Пт-Сб до 05:00
                   </div>
-                  <h1 className="font-display font-bold text-6xl md:text-8xl leading-none tracking-tight mb-4">
-                    ПИВО<br />
-                    <span className="gradient-text">МАН</span>
+
+                  <h1 className="font-display font-bold text-5xl md:text-7xl leading-none tracking-tight mb-5">
+                    БАР С ПОНЯТНОЙ<br />
+                    <span className="gradient-text">ЕДОЙ, ТАНЦАМИ</span><br />
+                    И ОСОБОЙ КУЛЬТУРОЙ
                   </h1>
-                  <p className="text-lg text-muted-foreground mb-2 leading-relaxed">
-                    Крафтовое пиво собственной варки · Закуски из живого огня · Квизы и живая музыка
+
+                  <p className="text-base text-muted-foreground mb-8 leading-relaxed max-w-md">
+                    Место, где днём можно поработать, съесть комплексный обед, а вечером получить удовольствие от ярких блюд или потанцевать
                   </p>
-                  <p className="text-sm text-muted-foreground/70 mb-8">
-                    ул. Гагарина, 43, Челябинск · <span className="text-primary">+7 (351) 200-80-00</span>
-                  </p>
+
                   <div className="flex flex-wrap gap-3">
-                    <button onClick={() => go("booking")}
-                      className="px-8 py-3 rounded-xl font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all duration-200 neon-glow-orange">
-                      Забронировать стол
+                    <button onClick={() => go("booking" as Section)}
+                      className="px-8 py-3.5 rounded-xl font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all duration-200 neon-glow-orange font-display tracking-wide">
+                      Забронировать столик
                     </button>
                     <button onClick={() => go("menu")}
-                      className="px-8 py-3 rounded-xl font-semibold glass border border-white/15 hover:border-primary/40 transition-all duration-200">
-                      Смотреть меню 🍺
+                      className="px-8 py-3.5 rounded-xl font-semibold glass border border-white/15 hover:border-primary/40 transition-all duration-200">
+                      Смотреть меню
                     </button>
                   </div>
                 </div>
               </div>
             </section>
 
+            {/* Stats */}
             <section className="border-y border-white/5 bg-card/50">
               <div className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
-                  { v: "2017", l: "Год основания" },
-                  { v: "8+", l: "Сортов крафта" },
-                  { v: "4.8★", l: "Оценка гостей" },
-                  { v: "03:00", l: "Работаем до" },
+                  { v: "285", l: "Магазинов ПивоМан" },
+                  { v: "50+", l: "Сортов пива" },
+                  { v: "4.9★", l: "Оценка гостей" },
+                  { v: "05:00", l: "Работаем до (Пт-Сб)" },
                 ].map((s) => (
                   <div key={s.v} className="text-center">
                     <div className="font-display font-bold text-3xl text-neon-orange">{s.v}</div>
@@ -195,165 +224,482 @@ export default function Index() {
               </div>
             </section>
 
-            <section className="max-w-6xl mx-auto px-4 py-16">
+            {/* News strip */}
+            <section className="max-w-6xl mx-auto px-4 py-14">
               <div className="flex items-end justify-between mb-8">
-                <h2 className="font-display font-bold text-4xl">АКЦИИ <span className="text-neon-pink">&</span> ФОРМАТЫ</h2>
-                <button onClick={() => go("news")} className="text-sm text-primary hover:text-primary/80 transition-colors">Все акции →</button>
+                <h2 className="font-display font-bold text-4xl">НОВОСТИ <span className="text-neon-pink">&</span> АКЦИИ</h2>
+                <button onClick={() => go("news")} className="text-sm text-primary hover:text-primary/80 transition-colors">Смотреть все →</button>
               </div>
               <div className="grid md:grid-cols-3 gap-4">
-                {promos.map((p) => (
-                  <div key={p.title} className="glass glass-hover rounded-2xl p-6">
-                    <div className="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center mb-4">
-                      <Icon name={p.icon as "Trophy"} size={22} className="text-primary" />
-                    </div>
-                    <h3 className="font-display font-semibold text-xl mb-2">{p.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="max-w-6xl mx-auto px-4 pb-16">
-              <div className="flex items-end justify-between mb-8">
-                <h2 className="font-display font-bold text-4xl">БЛИЖАЙШИЕ <span className="gradient-text">СОБЫТИЯ</span></h2>
-                <button onClick={() => go("news")} className="text-sm text-primary hover:text-primary/80 transition-colors">Все события →</button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {events.slice(0, 2).map((e) => (
-                  <div key={e.title} onClick={() => go("news")}
-                    className="glass glass-hover rounded-2xl p-6 flex gap-5 items-start cursor-pointer">
-                    <div className="shrink-0 text-center px-4 py-3 rounded-xl font-display font-bold text-sm leading-tight whitespace-pre-line"
-                      style={{ background: `${e.color}20`, color: e.color, border: `1px solid ${e.color}30` }}>
-                      {e.date}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-display font-semibold text-lg">{e.title}</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full"
-                          style={{ background: `${e.color}20`, color: e.color }}>{e.tag}</span>
+                {news.map((n) => (
+                  <div key={n.title} onClick={() => go("news")}
+                    className="glass glass-hover rounded-2xl overflow-hidden cursor-pointer">
+                    <div className="aspect-video relative overflow-hidden">
+                      <img src={n.img} alt={n.title} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                          style={{ background: `${n.color}25`, color: n.color, border: `1px solid ${n.color}35` }}>
+                          {n.tag}
+                        </span>
                       </div>
-                      <p className="text-sm text-muted-foreground">{e.desc}</p>
+                      <div className="absolute bottom-3 left-3 font-display font-bold text-sm whitespace-pre-line leading-tight"
+                        style={{ color: n.color }}>{n.date}</div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-display font-semibold text-lg mb-1">{n.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{n.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            <section className="max-w-6xl mx-auto px-4 pb-16">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl overflow-hidden aspect-video">
-                  <img src={IMG_BEER} alt="Крафтовое пиво" className="w-full h-full object-cover" />
+            {/* Бизнес-ланч promo */}
+            <section className="max-w-6xl mx-auto px-4 pb-14">
+              <div className="glass glass-hover rounded-2xl overflow-hidden">
+                <div className="grid md:grid-cols-2">
+                  <div className="p-8 md:p-10 flex flex-col justify-center">
+                    <div className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs text-primary mb-5 w-fit">
+                      <span className="w-2 h-2 bg-primary rounded-full" />
+                      Каждый день с 12:00 до 16:00
+                    </div>
+                    <h2 className="font-display font-bold text-4xl mb-4">
+                      БИЗНЕС-<span className="gradient-text">ЛАНЧ</span>
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                      Комплексный обед: суп + горячее + салат + напиток. Вкусно, быстро и по приятным ценам — идеально для рабочего перерыва.
+                    </p>
+                    <button onClick={() => go("lunch")}
+                      className="px-6 py-3 rounded-xl font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange w-fit font-display">
+                      Смотреть меню ланча
+                    </button>
+                  </div>
+                  <div className="aspect-video md:aspect-auto overflow-hidden">
+                    <img src={IMG_LUNCH} alt="Бизнес-ланч" className="w-full h-full object-cover" />
+                  </div>
                 </div>
-                <div className="rounded-2xl overflow-hidden aspect-video">
-                  <img src={IMG_FOOD} alt="Закуски" className="w-full h-full object-cover" />
-                </div>
+              </div>
+            </section>
+
+            {/* Gallery */}
+            <section className="max-w-6xl mx-auto px-4 pb-14">
+              <div className="flex items-end justify-between mb-6">
+                <h2 className="font-display font-bold text-4xl">ГАЛЕРЕЯ</h2>
+                <span className="text-sm text-muted-foreground">Атмосфера ПМ|БАР</span>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {gallery.map((img, i) => (
+                  <div key={i} className={`rounded-2xl overflow-hidden ${i === 0 ? "col-span-2 row-span-1" : ""}`}>
+                    <div className={`${i === 0 ? "aspect-[16/7]" : "aspect-square"} overflow-hidden`}>
+                      <img src={img} alt={`Галерея ${i+1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Booking CTA */}
+            <section className="max-w-6xl mx-auto px-4 pb-14">
+              <div className="glass rounded-2xl p-8 md:p-12 text-center border border-primary/15"
+                style={{ background: "linear-gradient(135deg, rgba(255,140,0,0.06), rgba(255,60,125,0.04))" }}>
+                <h2 className="font-display font-bold text-4xl md:text-5xl mb-4">ЗАБРОНИРОВАТЬ СТОЛИК</h2>
+                <p className="text-muted-foreground mb-2">Хотите забронировать столик? Оставьте свои контакты и мы с вами свяжемся.</p>
+                <p className="text-primary text-sm mb-8 font-medium">Информация по телефону: +7 (960) 179-09-89</p>
+                <button onClick={() => go("booking" as Section)}
+                  className="px-10 py-4 rounded-xl font-display font-semibold text-xl text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+                  ЗАБРОНИРОВАТЬ
+                </button>
+              </div>
+            </section>
+
+            {/* Reviews */}
+            <section className="max-w-6xl mx-auto px-4 pb-14">
+              <h2 className="font-display font-bold text-4xl mb-8">ОТЗЫВЫ <span className="gradient-text">ГОСТЕЙ</span></h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {reviews.map((r) => (
+                  <div key={r.author} className="glass glass-hover rounded-2xl p-6">
+                    <div className="flex items-center gap-1 mb-3">
+                      {Array(r.stars).fill(0).map((_, i) => (
+                        <Icon key={i} name="Star" size={14} className="text-primary fill-primary" style={{ fill: "var(--neon-orange)" }} />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">«{r.text}»</p>
+                    <div className="font-semibold text-sm">{r.author}</div>
+                  </div>
+                ))}
               </div>
             </section>
           </div>
         )}
 
-        {/* ── MENU ── */}
-        {section === "menu" && (
+        {/* ── О НАС ── */}
+        {section === "about" && (
+          <div className="max-w-5xl mx-auto px-4 py-10 animate-fade-in">
+            <h2 className="font-display font-bold text-5xl mb-2">О НАС</h2>
+            <p className="text-muted-foreground mb-10">ПМ|БАР — место с душой в самом центре Нижнего Новгорода</p>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-10">
+              <div>
+                <h3 className="font-display font-semibold text-2xl mb-4">БАР С ПОНЯТНОЙ ЕДОЙ</h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Место, где днём можно поработать, съесть комплексный обед, а вечером получить удовольствие от ярких и интересных блюд или потанцевать.
+                </p>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Мы создали пространство, где каждый найдёт что-то своё — будь то тихий обед в будни или зажигательная вечеринка с бармен-шоу в выходные.
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Особая культура питания — это про нас. Вкусная свежая еда, приемлемые цены и атмосфера, в которую хочется возвращаться снова.
+                </p>
+              </div>
+              <div className="rounded-2xl overflow-hidden aspect-[4/3]">
+                <img src={IMG_HERO} alt="Интерьер ПМ|БАР" className="w-full h-full object-cover" />
+              </div>
+            </div>
+
+            <div className="divider-orange mb-10" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(255,140,0,0.4), transparent)" }} />
+
+            <h3 className="font-display font-bold text-3xl mb-6">НАШ ПАРТНЁР — <span className="gradient-text">ПИВОМАН</span></h3>
+            <div className="grid md:grid-cols-2 gap-6 mb-10">
+              <div className="glass glass-hover rounded-2xl p-6">
+                <div className="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center mb-4">
+                  <Icon name="Trophy" size={22} className="text-primary" />
+                </div>
+                <h4 className="font-display font-semibold text-xl mb-2">Компания лидеров</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Компания успешных, позитивных и целеустремлённых людей. ПивоМан всегда добивается поставленных целей в работе и жизни. Стремимся к совершенству.
+                </p>
+              </div>
+              <div className="glass glass-hover rounded-2xl p-6">
+                <div className="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center mb-4">
+                  <Icon name="Beer" size={22} className="text-primary" />
+                </div>
+                <h4 className="font-display font-semibold text-xl mb-2">285 магазинов</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Сеть фирменных магазинов ПивоМан — в нашем городе и области уже открыто 285 магазинов. Продаётся более 50 сортов пива, квас, лимонад и сидр различных вкусов.
+                </p>
+              </div>
+              <div className="glass glass-hover rounded-2xl p-6">
+                <div className="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center mb-4">
+                  <Icon name="Star" size={22} className="text-primary" />
+                </div>
+                <h4 className="font-display font-semibold text-xl mb-2">Лучший выбор</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Сеть фирменных магазинов ПивоМан поможет вам сделать правильный выбор и купить подходящий вашему вкусу алкогольный напиток.
+                </p>
+              </div>
+              <div className="glass glass-hover rounded-2xl p-6">
+                <div className="w-12 h-12 bg-primary/15 rounded-xl flex items-center justify-center mb-4">
+                  <Icon name="Users" size={22} className="text-primary" />
+                </div>
+                <h4 className="font-display font-semibold text-xl mb-2">Надёжный гид</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Мы поможем вам стать надёжным гидом в удивительном мире высококачественных сортов пива. Выбирайте лучшее вместе с нами.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden grid grid-cols-3 gap-3">
+              {[IMG_BARTEN, IMG_QUIZ, IMG_LUNCH].map((img, i) => (
+                <div key={i} className="aspect-square overflow-hidden rounded-2xl">
+                  <img src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── МЕНЮ ── */}
+        {section === "menu" && !selectedFormat && (
           <div className="max-w-6xl mx-auto px-4 py-10 animate-fade-in">
             <h2 className="font-display font-bold text-5xl mb-2">МЕНЮ</h2>
-            <p className="text-muted-foreground mb-8">Крафтовое пиво собственной варки · Авторские закуски · Коктейли</p>
+            <p className="text-muted-foreground mb-10">Выбери формат вечера — мы подстроимся под тебя</p>
 
-            <div className="flex gap-2 mb-8 p-1 glass rounded-xl w-fit flex-wrap">
-              {([
-                { k: "beer",      l: "🍺 Пиво" },
-                { k: "food",      l: "🍖 Кухня" },
-                { k: "cocktails", l: "🍹 Коктейли" },
-                { k: "soft",      l: "🥤 Безалк" },
-              ] as { k: MenuTab; l: string }[]).map(t => (
-                <button key={t.k} onClick={() => setMenuTab(t.k)}
-                  className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                    menuTab === t.k
-                      ? "bg-primary text-primary-foreground neon-glow-orange"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}>{t.l}</button>
+            <div className="grid md:grid-cols-2 gap-5">
+              {menuFormats.map((f) => (
+                <div key={f.id} onClick={() => setActiveFormat(f.id)}
+                  className="glass glass-hover rounded-2xl overflow-hidden cursor-pointer group">
+                  <div className="aspect-video overflow-hidden relative">
+                    <img src={f.img} alt={f.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                    <div className="absolute bottom-4 left-5">
+                      <div className="text-xs font-medium mb-1 opacity-80" style={{ color: f.color }}>{f.subtitle}</div>
+                      <h3 className="font-display font-bold text-2xl" style={{ color: "#fff", textShadow: `0 0 20px ${f.color}50` }}>
+                        {f.title}
+                      </h3>
+                    </div>
+                    <div className="absolute top-3 right-3 w-9 h-9 glass rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Icon name="ArrowRight" size={16} className="text-foreground" />
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                    <button className="mt-4 text-sm font-semibold transition-colors" style={{ color: f.color }}>
+                      Подробнее →
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
 
-            {menuTab === "beer" && (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {beerMenu.map((item) => (
-                  <div key={item.name} className="glass glass-hover rounded-2xl p-5">
-                    {item.tag && (
-                      <span className={`text-xs px-2 py-0.5 rounded-full mb-3 inline-block font-medium ${TAG_STYLES[item.tag] ?? "bg-primary/20 text-primary"}`}>
-                        {item.tag}
-                      </span>
-                    )}
-                    <h3 className="font-display font-semibold text-lg mb-0.5">{item.name}</h3>
-                    <p className="text-xs text-muted-foreground mb-2">{item.style}</p>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{item.desc}</p>
-                    {item.abv > 0 && (
-                      <div className="space-y-1.5 mb-4">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="w-8">ABV</span>
-                          <div className="flex-1 h-1.5 rounded-full bg-secondary">
-                            <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(item.abv / 8 * 100, 100)}%` }} />
-                          </div>
-                          <span>{item.abv}%</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="w-8">IBU</span>
-                          <div className="flex-1 h-1.5 rounded-full bg-secondary">
-                            <div className="h-full rounded-full bg-accent" style={{ width: `${Math.min(item.ibu / 80 * 100, 100)}%` }} />
-                          </div>
-                          <span>{item.ibu}</span>
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-neon-orange text-lg">{item.price}</span>
-                      <button className="w-9 h-9 rounded-lg bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-colors">
-                        <Icon name="Plus" size={16} className="text-primary" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {menuTab !== "beer" && (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {currentMenu.map((item) => (
-                  <div key={item.name} className="glass glass-hover rounded-2xl p-5">
-                    {"tag" in item && item.tag && (
-                      <span className={`text-xs px-2 py-0.5 rounded-full mb-3 inline-block font-medium ${TAG_STYLES[item.tag] ?? "bg-primary/20 text-primary"}`}>
-                        {item.tag}
-                      </span>
-                    )}
-                    <h3 className="font-display font-semibold text-lg mb-1">{item.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{item.desc}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-neon-orange text-lg">{item.price}</span>
-                      <button className="w-9 h-9 rounded-lg bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-colors">
-                        <Icon name="Plus" size={16} className="text-primary" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="mt-8 glass rounded-2xl p-6 border border-primary/15 text-center">
+              <p className="text-muted-foreground mb-2">Хотите отдельное меню или особый формат?</p>
+              <p className="text-sm text-primary font-medium mb-4">Звоните: +7 (960) 179-09-89</p>
+              <button onClick={() => go("lunch")}
+                className="px-6 py-2.5 rounded-xl bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-all text-sm font-semibold">
+                Также смотрите: Бизнес-ланч →
+              </button>
+            </div>
           </div>
         )}
 
-        {/* ── BOOKING ── */}
-        {section === "booking" && (
+        {/* ── ДЕТАЛЬНАЯ СТРАНИЦА ФОРМАТА ── */}
+        {section === "menu" && selectedFormat && (
+          <div className="max-w-3xl mx-auto px-4 py-10 animate-fade-in">
+            <button onClick={() => setActiveFormat(null)}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm">
+              <Icon name="ArrowLeft" size={16} />
+              Все форматы меню
+            </button>
+
+            <div className="rounded-2xl overflow-hidden aspect-video mb-8">
+              <img src={selectedFormat.img} alt={selectedFormat.title} className="w-full h-full object-cover" />
+            </div>
+
+            <div className="mb-3">
+              <span className="text-xs font-medium" style={{ color: selectedFormat.color }}>{selectedFormat.subtitle}</span>
+            </div>
+            <h2 className="font-display font-bold text-5xl mb-4">{selectedFormat.title}</h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">{selectedFormat.desc}</p>
+
+            <div className="glass rounded-2xl p-6 mb-6">
+              <h3 className="font-display font-semibold text-xl mb-4">ЧТО ВКЛЮЧЕНО</h3>
+              <div className="space-y-3">
+                {selectedFormat.includes.map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                      style={{ background: `${selectedFormat.color}20`, border: `1px solid ${selectedFormat.color}35` }}>
+                      <Icon name="Check" size={11} style={{ color: selectedFormat.color }} />
+                    </div>
+                    <span className="text-sm text-foreground">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass rounded-xl p-4 border border-primary/20 mb-8">
+              <div className="flex items-start gap-3">
+                <Icon name="Info" size={16} className="text-primary mt-0.5 shrink-0" />
+                <p className="text-sm text-muted-foreground">{selectedFormat.note}</p>
+              </div>
+            </div>
+
+            <button onClick={() => go("booking" as Section)}
+              className="w-full py-4 rounded-xl font-display font-semibold text-xl text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+              ЗАБРОНИРОВАТЬ СТОЛИК
+            </button>
+          </div>
+        )}
+
+        {/* ── БИЗНЕС-ЛАНЧ ── */}
+        {section === "lunch" && (
+          <div className="max-w-4xl mx-auto px-4 py-10 animate-fade-in">
+            <div className="flex items-center gap-3 mb-2">
+              <h2 className="font-display font-bold text-5xl">БИЗНЕС-ЛАНЧ</h2>
+            </div>
+            <p className="text-muted-foreground mb-2">Каждый день с 12:00 до 16:00</p>
+            <div className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs text-primary mb-8">
+              <span className="w-2 h-2 bg-primary rounded-full pulse-neon" />
+              Комплексный обед: суп + горячее + салат + напиток
+            </div>
+
+            <div className="rounded-2xl overflow-hidden aspect-video mb-8">
+              <img src={IMG_LUNCH} alt="Бизнес-ланч" className="w-full h-full object-cover" />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 mb-8">
+              {lunchMenu.map((cat) => (
+                <div key={cat.course} className="glass glass-hover rounded-2xl p-6">
+                  <h3 className="font-display font-semibold text-xl mb-4 text-primary">{cat.course}</h3>
+                  <ul className="space-y-2">
+                    {cat.items.map((item) => (
+                      <li key={item} className="flex items-center gap-3 text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary/60 shrink-0" />
+                        <span className="text-foreground">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="glass rounded-2xl p-6 border border-primary/15 text-center">
+              <p className="font-display font-bold text-2xl mb-2">ВКУСНО · БЫСТРО · ПО ПРИЯТНЫМ ЦЕНАМ</p>
+              <p className="text-muted-foreground text-sm mb-4">Уточняйте состав дня и цены у персонала или по телефону</p>
+              <a href="tel:+79601790989" className="text-xl font-display font-semibold text-primary hover:text-primary/80 transition-colors">
+                +7 (960) 179-09-89
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* ── НОВОСТИ ── */}
+        {section === "news" && (
+          <div className="max-w-6xl mx-auto px-4 py-10 animate-fade-in">
+            <h2 className="font-display font-bold text-5xl mb-2">НОВОСТИ <span className="gradient-text">&</span> СОБЫТИЯ</h2>
+            <p className="text-muted-foreground mb-10">Актуальные события, акции и мероприятия</p>
+
+            <div className="grid md:grid-cols-3 gap-5 mb-12">
+              {news.map((n) => (
+                <div key={n.title} className="glass glass-hover rounded-2xl overflow-hidden">
+                  <div className="aspect-video overflow-hidden relative">
+                    <img src={n.img} alt={n.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
+                    <div className="absolute top-3 left-3">
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                        style={{ background: `${n.color}22`, color: n.color, border: `1px solid ${n.color}33` }}>
+                        {n.tag}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <div className="text-xs text-muted-foreground mb-2 font-medium" style={{ color: n.color }}>{n.date.replace("\n", " ")}</div>
+                    <h3 className="font-display font-semibold text-xl mb-2">{n.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{n.desc}</p>
+                    <button className="mt-4 text-sm font-medium text-primary hover:text-primary/80 transition-colors">Подробнее →</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Бармен-шоу highlight */}
+            <div className="glass rounded-2xl overflow-hidden">
+              <div className="grid md:grid-cols-2">
+                <div className="aspect-video md:aspect-auto overflow-hidden">
+                  <img src={IMG_BARTEN} alt="Бармен-шоу" className="w-full h-full object-cover" />
+                </div>
+                <div className="p-8 flex flex-col justify-center">
+                  <div className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs text-primary mb-5 w-fit">
+                    <span className="w-2 h-2 bg-accent rounded-full" />
+                    Каждые выходные
+                  </div>
+                  <h3 className="font-display font-bold text-3xl mb-4">БАРМЕН-ШОУ<br /><span className="gradient-text">ПМ|БАР</span></h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                    Каждые выходные для вас работает команда профессиональных барменов. Жонглирование, огненное шоу и авторские коктейли прямо у вас на глазах!
+                  </p>
+                  <button onClick={() => go("booking" as Section)}
+                    className="px-6 py-3 rounded-xl font-display font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange w-fit">
+                    Забронировать столик
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── КОНТАКТЫ ── */}
+        {section === "contacts" && (
+          <div className="max-w-5xl mx-auto px-4 py-10 animate-fade-in">
+            <h2 className="font-display font-bold text-5xl mb-2">КОНТАКТЫ</h2>
+            <p className="text-muted-foreground mb-10">Ждём вас в ПМ|БАР</p>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                {[
+                  { icon: "MapPin",  l: "Адрес",          v: "ул. Белинского, 61/1",     s: "Нижний Новгород" },
+                  { icon: "Phone",   l: "Телефон / Бронь", v: "+7 (960) 179-09-89",       s: "Позвоните нам" },
+                  { icon: "Clock",   l: "Пн — Четверг",    v: "12:00 — 03:00",            s: "" },
+                  { icon: "Clock",   l: "Пятница, Суббота",v: "12:00 — 05:00",            s: "Работаем позже!" },
+                  { icon: "Clock",   l: "Воскресенье",     v: "12:00 — 03:00",            s: "" },
+                ].map((c, i) => (
+                  <div key={i} className="glass glass-hover rounded-2xl p-5 flex items-start gap-4">
+                    <div className="w-11 h-11 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
+                      <Icon name={c.icon as "MapPin"} size={20} className="text-primary" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-0.5">{c.l}</div>
+                      <div className="font-semibold">{c.v}</div>
+                      {c.s && <div className="text-xs text-muted-foreground mt-0.5">{c.s}</div>}
+                    </div>
+                  </div>
+                ))}
+
+                <a href="tel:+79601790989"
+                  className="flex items-center justify-center gap-3 py-4 rounded-2xl font-display font-semibold text-lg text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+                  <Icon name="Phone" size={20} />
+                  +7 (960) 179-09-89
+                </a>
+              </div>
+
+              <div className="space-y-4">
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="font-display font-semibold text-xl mb-5">МЫ В СОЦСЕТЯХ</h3>
+                  <div className="space-y-3">
+                    {[
+                      { name: "ВКонтакте",  handle: "vk.com/pivomanbar",    icon: "Users",  color: "var(--neon-cyan)" },
+                      { name: "Telegram",   handle: "@pivomanbar",           icon: "Send",   color: "var(--neon-orange)" },
+                      { name: "Instagram*", handle: "@pivoman_bar",          icon: "Camera", color: "var(--neon-pink)" },
+                    ].map(s => (
+                      <div key={s.name} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: `${s.color}20` }}>
+                          <Icon name={s.icon as "Users"} size={18} style={{ color: s.color }} />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">{s.name}</div>
+                          <div className="text-xs text-muted-foreground">{s.handle}</div>
+                        </div>
+                        <Icon name="ExternalLink" size={13} className="text-muted-foreground ml-auto" />
+                      </div>
+                    ))}
+                    <p className="text-xs text-muted-foreground mt-2">* — заблокирован в РФ</p>
+                  </div>
+                </div>
+
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="font-display font-semibold text-xl mb-3">КАК ДОБРАТЬСЯ</h3>
+                  <div className="rounded-xl overflow-hidden aspect-video flex items-center justify-center bg-secondary/50">
+                    <div className="text-center">
+                      <Icon name="MapPin" size={36} className="mx-auto mb-2 text-primary" />
+                      <p className="font-semibold">ул. Белинского, 61/1</p>
+                      <p className="text-sm text-muted-foreground mt-1">Нижний Новгород</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="glass rounded-2xl p-5 border border-primary/15">
+                  <div className="flex items-start gap-3">
+                    <Icon name="MessageCircle" size={18} className="text-primary mt-0.5 shrink-0" />
+                    <div>
+                      <div className="font-medium text-sm mb-1">Бронирование столика</div>
+                      <p className="text-xs text-muted-foreground">Оставьте свои контакты — мы свяжемся с вами и подтвердим бронь</p>
+                      <button onClick={() => go("booking" as Section)}
+                        className="mt-3 text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
+                        Форма бронирования →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── БРОНИРОВАНИЕ ── */}
+        {section === ("booking" as Section) && (
           <div className="max-w-2xl mx-auto px-4 py-10 animate-fade-in">
             <h2 className="font-display font-bold text-5xl mb-2">БРОНИРОВАНИЕ</h2>
-            <p className="text-muted-foreground mb-8">Выберите дату, время и количество гостей</p>
+            <p className="text-muted-foreground mb-8">Оставьте контакты — мы свяжемся с вами</p>
 
             {bSuccess ? (
               <div className="glass rounded-2xl p-10 text-center">
                 <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 neon-glow-orange">
                   <Icon name="CheckCircle2" size={40} className="text-primary" />
                 </div>
-                <h3 className="font-display font-bold text-3xl mb-3">Бронь отправлена!</h3>
-                <p className="text-muted-foreground mb-2">Мы позвоним для подтверждения в течение 15 минут</p>
-                <p className="text-sm text-muted-foreground mb-6">Push-уведомление придёт сразу после подтверждения</p>
-                <button onClick={() => { setBSuccess(false); setBDate(""); setBTime(""); setBName(""); setBPhone(""); setBComment(""); }}
+                <h3 className="font-display font-bold text-3xl mb-3">Заявка принята!</h3>
+                <p className="text-muted-foreground mb-2">Мы свяжемся с вами в течение 15 минут</p>
+                <p className="text-sm text-muted-foreground mb-6">Или позвоните нам: <a href="tel:+79601790989" className="text-primary">+7 (960) 179-09-89</a></p>
+                <button onClick={() => { setBSuccess(false); setBDate(""); setBTime(""); setBName(""); setBPhone(""); }}
                   className="px-6 py-2.5 rounded-xl glass border border-white/15 hover:border-primary/40 transition-all text-sm font-medium">
                   Новая бронь
                 </button>
@@ -372,7 +718,7 @@ export default function Index() {
                     <select value={bTime} onChange={e => setBTime(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl bg-secondary/50 border border-border focus:border-primary/50 focus:outline-none text-foreground transition-colors">
                       <option value="">Выберите</option>
-                      {["12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"].map(t => (
+                      {["12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00"].map(t => (
                         <option key={t} value={t}>{t}</option>
                       ))}
                     </select>
@@ -385,24 +731,8 @@ export default function Index() {
                     {["1","2","3","4","5","6","7","8+"].map(n => (
                       <button key={n} onClick={() => setBGuests(n)}
                         className={`w-12 h-12 rounded-xl font-semibold text-sm transition-all duration-200 ${
-                          bGuests === n
-                            ? "bg-primary text-primary-foreground neon-glow-orange"
-                            : "glass border border-white/10 hover:border-primary/30"
+                          bGuests === n ? "bg-primary text-primary-foreground neon-glow-orange" : "glass border border-white/10 hover:border-primary/30"
                         }`}>{n}</button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">Зона</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {["Основной зал", "Барная стойка", "VIP-кабинет", "Летняя терраса"].map(z => (
-                      <button key={z} onClick={() => setBZone(z)}
-                        className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                          bZone === z
-                            ? "bg-primary/20 text-primary border border-primary/30"
-                            : "glass border border-white/8 text-muted-foreground hover:text-foreground"
-                        }`}>{z}</button>
                     ))}
                   </div>
                 </div>
@@ -415,227 +745,27 @@ export default function Index() {
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground block mb-2">Телефон</label>
-                    <input type="tel" value={bPhone} onChange={e => setBPhone(e.target.value)} placeholder="+7 (351) ..."
+                    <input type="tel" value={bPhone} onChange={e => setBPhone(e.target.value)} placeholder="+7 (960) ..."
                       className="w-full px-4 py-3 rounded-xl bg-secondary/50 border border-border focus:border-primary/50 focus:outline-none text-foreground placeholder:text-muted-foreground transition-colors" />
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">Комментарий (необязательно)</label>
-                  <textarea value={bComment} onChange={e => setBComment(e.target.value)} rows={2}
-                    placeholder="День рождения, особые пожелания..."
-                    className="w-full px-4 py-3 rounded-xl bg-secondary/50 border border-border focus:border-primary/50 focus:outline-none text-foreground placeholder:text-muted-foreground transition-colors resize-none" />
-                </div>
-
                 <div className="glass rounded-xl p-4 border border-primary/20">
                   <div className="flex items-start gap-3">
-                    <Icon name="Bell" size={18} className="text-primary mt-0.5 shrink-0" />
-                    <p className="text-sm text-muted-foreground">После подтверждения вы получите push-уведомление на телефон</p>
+                    <Icon name="Phone" size={16} className="text-primary mt-0.5 shrink-0" />
+                    <p className="text-sm text-muted-foreground">
+                      Или звоните напрямую: <a href="tel:+79601790989" className="text-primary font-medium">+7 (960) 179-09-89</a>
+                    </p>
                   </div>
                 </div>
 
-                <button onClick={() => { if (bDate && bTime && bName && bPhone) setBSuccess(true); }}
-                  disabled={!bDate || !bTime || !bName || !bPhone}
-                  className="w-full py-4 rounded-xl font-display font-semibold text-lg tracking-wide text-primary-foreground bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 neon-glow-orange">
-                  ЗАБРОНИРОВАТЬ СТОЛ
+                <button onClick={() => { if (bDate && bName && bPhone) setBSuccess(true); }}
+                  disabled={!bDate || !bName || !bPhone}
+                  className="w-full py-4 rounded-xl font-display font-semibold text-xl tracking-wide text-primary-foreground bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 neon-glow-orange">
+                  ЗАБРОНИРОВАТЬ СТОЛИК
                 </button>
               </div>
             )}
-          </div>
-        )}
-
-        {/* ── NEWS ── */}
-        {section === "news" && (
-          <div className="max-w-6xl mx-auto px-4 py-10 animate-fade-in">
-            <h2 className="font-display font-bold text-5xl mb-2">НОВОСТИ <span className="gradient-text">&</span> СОБЫТИЯ</h2>
-            <p className="text-muted-foreground mb-8">Мероприятия, акции и специальные предложения</p>
-
-            <h3 className="font-display font-semibold text-2xl mb-4 text-muted-foreground">МЕРОПРИЯТИЯ</h3>
-            <div className="grid md:grid-cols-2 gap-4 mb-12">
-              {events.map((e) => (
-                <div key={e.title} className="glass glass-hover rounded-2xl p-6 flex gap-5 items-start">
-                  <div className="shrink-0 text-center px-4 py-4 rounded-xl font-display font-bold text-sm leading-tight min-w-[64px] whitespace-pre-line"
-                    style={{ background: `${e.color}15`, color: e.color, border: `1px solid ${e.color}30` }}>
-                    {e.date}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="font-display font-semibold text-xl">{e.title}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full"
-                        style={{ background: `${e.color}20`, color: e.color }}>{e.tag}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{e.desc}</p>
-                    <button className="mt-3 text-sm font-medium" style={{ color: e.color }}>Подробнее →</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <h3 className="font-display font-semibold text-2xl mb-4 text-muted-foreground">АКЦИИ</h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {promos.map((p) => (
-                <div key={p.title} className="glass glass-hover rounded-2xl p-6">
-                  <div className="w-12 h-12 bg-accent/15 rounded-xl flex items-center justify-center mb-4">
-                    <Icon name={p.icon as "Trophy"} size={22} className="text-accent" />
-                  </div>
-                  <h3 className="font-display font-semibold text-xl mb-2">{p.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── CONTACTS ── */}
-        {section === "contacts" && (
-          <div className="max-w-6xl mx-auto px-4 py-10 animate-fade-in">
-            <h2 className="font-display font-bold text-5xl mb-2">КОНТАКТЫ</h2>
-            <p className="text-muted-foreground mb-10">Мы всегда рады видеть вас</p>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                {[
-                  { icon: "MapPin", l: "Адрес", v: "ул. Гагарина, 43, Челябинск", s: "Центральный район" },
-                  { icon: "Phone", l: "Телефон", v: "+7 (351) 200-80-00", s: "Ежедневно 12:00 — 03:00" },
-                  { icon: "Phone", l: "Бронирование", v: "+7 (351) 200-80-01", s: "Приоритетная линия" },
-                  { icon: "Mail", l: "Email", v: "info@pivomanbar.ru", s: "Ответим в течение часа" },
-                  { icon: "Clock", l: "Режим работы", v: "12:00 — 03:00", s: "Без выходных" },
-                ].map((c) => (
-                  <div key={c.l} className="glass glass-hover rounded-2xl p-5 flex items-start gap-4">
-                    <div className="w-11 h-11 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
-                      <Icon name={c.icon as "MapPin"} size={20} className="text-primary" />
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-0.5">{c.l}</div>
-                      <div className="font-semibold">{c.v}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{c.s}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-4">
-                <div className="glass rounded-2xl p-6">
-                  <h3 className="font-display font-semibold text-xl mb-5">МЫ В СОЦСЕТЯХ</h3>
-                  <div className="space-y-3">
-                    {[
-                      { name: "ВКонтакте", handle: "vk.com/pivomanbar", icon: "Users", color: "var(--neon-cyan)" },
-                      { name: "Telegram", handle: "@pivomanbar", icon: "Send", color: "var(--neon-orange)" },
-                      { name: "Instagram*", handle: "@pivoman_bar", icon: "Camera", color: "var(--neon-pink)" },
-                      { name: "TikTok", handle: "@pivoman.bar", icon: "Music", color: "var(--neon-orange)" },
-                    ].map(s => (
-                      <div key={s.name} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ background: `${s.color}20` }}>
-                          <Icon name={s.icon as "Users"} size={18} style={{ color: s.color }} />
-                        </div>
-                        <div>
-                          <div className="font-medium text-sm">{s.name}</div>
-                          <div className="text-xs text-muted-foreground">{s.handle}</div>
-                        </div>
-                        <Icon name="ExternalLink" size={14} className="text-muted-foreground ml-auto" />
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-4">* — заблокирован в РФ</p>
-                </div>
-
-                <div className="glass rounded-2xl p-6">
-                  <h3 className="font-display font-semibold text-xl mb-3">КАК ДОБРАТЬСЯ</h3>
-                  <div className="rounded-xl overflow-hidden aspect-video flex items-center justify-center bg-secondary/50">
-                    <div className="text-center text-muted-foreground">
-                      <Icon name="MapPin" size={32} className="mx-auto mb-2 text-primary" />
-                      <p className="text-sm">ул. Гагарина, 43, Челябинск</p>
-                      <p className="text-xs mt-1 text-muted-foreground">Центральный район</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── PROFILE ── */}
-        {section === "profile" && (
-          <div className="max-w-4xl mx-auto px-4 py-10 animate-fade-in">
-            <h2 className="font-display font-bold text-5xl mb-8">ЛИЧНЫЙ КАБИНЕТ</h2>
-
-            <div className="glass rounded-2xl p-6 mb-6 flex items-center gap-5">
-              <div className="w-20 h-20 rounded-2xl flex items-center justify-center font-display font-bold text-3xl text-primary-foreground shrink-0"
-                style={{ background: "linear-gradient(135deg, #FF8C00, #FF3C7D)" }}>
-                ИК
-              </div>
-              <div className="flex-1">
-                <h3 className="font-display font-bold text-2xl">Иван Краснов</h3>
-                <p className="text-muted-foreground text-sm">+7 (351) 987-65-43</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xs px-2.5 py-1 rounded-full bg-primary/20 text-primary font-medium">🍺 Пивоман Premium</span>
-                  <span className="text-xs text-muted-foreground">с 2022 года</span>
-                </div>
-              </div>
-              <button className="p-2 glass rounded-xl hover:bg-white/10 transition-colors">
-                <Icon name="Settings" size={18} className="text-muted-foreground" />
-              </button>
-            </div>
-
-            <div className="glass rounded-2xl p-5 mb-6 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center">
-                  <Icon name="Bell" size={18} className="text-accent" />
-                </div>
-                <div>
-                  <div className="font-medium text-sm">Push-уведомления</div>
-                  <div className="text-xs text-muted-foreground">Брони, готовность блюд, акции</div>
-                </div>
-              </div>
-              <div className="w-12 h-6 bg-primary rounded-full relative cursor-pointer pulse-neon">
-                <div className="w-5 h-5 bg-background rounded-full absolute top-0.5 right-0.5" />
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="font-display font-semibold text-xl mb-3 text-muted-foreground">БРОНИ</h3>
-              <div className="space-y-3">
-                {myReservations.map(r => (
-                  <div key={r.id} className="glass rounded-2xl p-5 flex items-center gap-4">
-                    <div className="w-10 h-10 bg-primary/15 rounded-xl flex items-center justify-center shrink-0">
-                      <Icon name="CalendarDays" size={18} className="text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold">{r.date}</div>
-                      <div className="text-sm text-muted-foreground">{r.guests} · {r.zone}</div>
-                    </div>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-green-500/20 text-green-400 font-medium">{r.status}</span>
-                  </div>
-                ))}
-                <button onClick={() => go("booking")}
-                  className="w-full py-3 rounded-2xl glass border border-dashed border-white/15 hover:border-primary/40 text-sm text-muted-foreground hover:text-foreground transition-all">
-                  + Новая бронь
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-display font-semibold text-xl mb-3 text-muted-foreground">ИСТОРИЯ ЗАКАЗОВ</h3>
-              <div className="space-y-3">
-                {myOrders.map(o => (
-                  <div key={o.id} className="glass rounded-2xl p-5">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-display font-semibold">{o.id}</span>
-                        <span className="text-xs text-muted-foreground">{o.date}</span>
-                      </div>
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-muted text-muted-foreground">{o.status}</span>
-                    </div>
-                    <div className="text-sm text-muted-foreground mb-3">{o.items}</div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-neon-orange">{o.total}</span>
-                      <button className="text-xs text-primary hover:text-primary/80 transition-colors">Повторить заказ</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         )}
       </main>
@@ -648,8 +778,8 @@ export default function Index() {
               className={`flex flex-col items-center justify-center gap-1 transition-all duration-200 ${
                 section === item.id ? "text-primary" : "text-muted-foreground"
               }`}>
-              <Icon name={item.icon} size={20} />
-              <span className="text-[9px] font-medium leading-none">{item.label}</span>
+              <Icon name={item.icon} size={19} />
+              <span className="text-[8px] font-medium leading-none">{item.label}</span>
             </button>
           ))}
         </div>
