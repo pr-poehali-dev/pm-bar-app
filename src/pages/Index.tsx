@@ -8,7 +8,65 @@ const IMG_BARTEN  = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79
 const IMG_BEER    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/38044e8e-708c-4975-a687-86a1053cf49f.jpg";
 const IMG_FOOD    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/files/a88dedaf-a079-447e-833f-588479991bb9.jpg";
 
-type Section = "home" | "menu" | "booking" | "about" | "news" | "contacts" | "lunch";
+type Section = "home" | "menu" | "booking" | "about" | "news" | "contacts" | "lunch" | "kitchen";
+
+const IMG_FUNCHOZA = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/bucket/c76e909a-0201-40af-b15f-40fd5a191f57.png";
+const IMG_PASTA    = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/bucket/a9bf8a44-6708-4fbe-8d51-4b4181157ac0.png";
+const IMG_GARNIR   = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/bucket/d46ad450-d225-454b-9fc5-c11eaf22f029.png";
+const IMG_DESSERT  = "https://cdn.poehali.dev/projects/090c5b8b-a1a3-4a28-9422-79e03db7a553/bucket/a85d347b-afa3-4265-99df-573237348926.png";
+
+const kitchenMenu = [
+  {
+    id: "funchoza",
+    title: "Фунчоза",
+    img: IMG_FUNCHOZA,
+    color: "var(--neon-cyan)",
+    items: [
+      { name: "Фунчоза в азиатском стиле (база)", price: 160, weight: "1/150 г" },
+      { name: "с беконом", price: 330, weight: "1/180 г", numbered: 1 },
+      { name: "с куриным филе", price: 330, weight: "1/200 г", numbered: 2 },
+      { name: "с креветками", price: 430, weight: "1/180 г", numbered: 3 },
+      { name: "со свининой", price: 330, weight: "1/200 г", numbered: 4 },
+    ],
+  },
+  {
+    id: "pasta",
+    title: "Паста",
+    img: IMG_PASTA,
+    color: "var(--neon-orange)",
+    items: [
+      { name: "Паста с курицей и грибами", price: 470, weight: "1/235 г", numbered: 1 },
+      { name: "Паста с креветками и лососем", price: 990, weight: "1/250 г", numbered: 2 },
+      { name: "Паста карбонара", price: 495, weight: "1/250 г", numbered: 3 },
+    ],
+  },
+  {
+    id: "garniry",
+    title: "Гарниры",
+    img: IMG_GARNIR,
+    color: "var(--neon-pink)",
+    items: [
+      { name: "Картофельное пюре", price: 100, weight: "1/120 г", numbered: 1 },
+      { name: "Картофель по-деревенски", price: 140, weight: "1/120 г", numbered: 2 },
+      { name: "Картофель фри", price: 170, weight: "1/120 г", numbered: 3 },
+      { name: "Драники", price: 160, weight: "1/120 г", numbered: 4 },
+      { name: "Рис с овощами", price: 110, weight: "1/150 г" },
+    ],
+  },
+  {
+    id: "deserty",
+    title: "Десерты",
+    img: IMG_DESSERT,
+    color: "var(--neon-orange)",
+    items: [
+      { name: "Мороженое", price: 230, weight: "1/150 г", numbered: 1 },
+      { name: "Чизкейк шоколадный", price: 420, weight: "1/120 г", numbered: 2 },
+      { name: "Чизкейк Нью-Йорк", price: 420, weight: "1/120 г", numbered: 3 },
+      { name: "Десерт таежный", price: 280, weight: "1/100 г", numbered: 4 },
+      { name: "Шоколадный фондан", price: 360, weight: "90/40/10 г", numbered: 5 },
+    ],
+  },
+];
 
 // ─── МЕНЮ-ФОРМАТЫ (реальные с сайта) ───────────────────────────────────────
 const menuFormats = [
@@ -112,6 +170,7 @@ export default function Index() {
     { id: "home",     label: "Главная",       icon: "Home" },
     { id: "about",    label: "О нас",         icon: "Info" },
     { id: "menu",     label: "Меню",          icon: "UtensilsCrossed" },
+    { id: "kitchen",  label: "Кухня",         icon: "ChefHat" },
     { id: "lunch",    label: "Бизнес-ланч",   icon: "Coffee" },
     { id: "news",     label: "Новости",       icon: "Newspaper" },
     { id: "contacts", label: "Контакты",      icon: "MapPin" },
@@ -681,6 +740,59 @@ export default function Index() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── КУХНЯ ── */}
+        {section === "kitchen" && (
+          <div className="max-w-6xl mx-auto px-4 py-10 animate-fade-in">
+            <h2 className="font-display font-bold text-5xl mb-2">КУХНЯ</h2>
+            <p className="text-muted-foreground mb-10">Авторские блюда от нашего шефа</p>
+
+            <div className="space-y-12">
+              {kitchenMenu.map((cat) => (
+                <div key={cat.id}>
+                  <div className="rounded-2xl overflow-hidden aspect-[3/1] mb-6 relative">
+                    <img src={cat.img} alt={cat.title} className="w-full h-full object-cover object-top" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/30 to-transparent flex items-center">
+                      <h3 className="font-display font-bold text-5xl ml-8" style={{ color: "#fff", textShadow: `0 0 30px ${cat.color}80` }}>
+                        {cat.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {cat.items.map((item, i) => (
+                      <div key={i} className="glass glass-hover rounded-2xl p-5 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          {"numbered" in item && item.numbered && (
+                            <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold"
+                              style={{ background: `${cat.color}25`, border: `1px solid ${cat.color}50`, color: cat.color }}>
+                              {item.numbered}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <div className="font-medium text-sm leading-snug truncate">{item.name}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5">{item.weight}</div>
+                          </div>
+                        </div>
+                        <div className="font-display font-bold text-lg shrink-0" style={{ color: cat.color }}>
+                          {item.price}₽
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 glass rounded-2xl p-6 border border-primary/15 text-center">
+              <p className="text-muted-foreground mb-2">Хотите заказать столик?</p>
+              <button onClick={() => go("booking" as Section)}
+                className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all neon-glow-orange text-sm">
+                Забронировать →
+              </button>
             </div>
           </div>
         )}
