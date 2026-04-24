@@ -184,41 +184,27 @@ export default function Index() {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden" style={{ fontFamily: "'Golos Text', sans-serif" }}>
 
       {/* HEADER */}
-      <header className="fixed top-0 inset-x-0 z-50 glass border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <button onClick={() => go("home")} className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-black text-sm text-primary-foreground"
-              style={{ background: "linear-gradient(135deg, #FF8C00, #FF3C7D)" }}>
-              ПМ
-            </div>
-            <div className="leading-none">
-              <div className="font-display font-bold text-lg tracking-widest gradient-text">ПМ|БАР</div>
-              <div className="text-[9px] text-muted-foreground tracking-[0.2em] uppercase">Нижний Новгород</div>
-            </div>
+      <header className="fixed top-0 inset-x-0 z-50 bg-black/90 border-b border-white/8">
+        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+          <button onClick={() => go("home")} className="font-display font-bold text-xl tracking-wider gradient-text">
+            ПМ БАР
           </button>
 
-          <nav className="hidden md:flex items-center gap-0.5">
+          <nav className="hidden md:flex items-center gap-1">
             {nav.map((item) => (
               <button key={item.id} onClick={() => go(item.id as Section)}
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
                   section === item.id
-                    ? "bg-primary/20 text-primary border border-primary/30"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    ? "bg-primary text-primary-foreground rounded-full"
+                    : "text-white/70 hover:text-white"
                 }`}>
                 {item.label}
               </button>
             ))}
           </nav>
 
-          <button onClick={() => go("booking" as Section)}
-            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
-            <Icon name="CalendarDays" size={16} />
-            Забронировать
-          </button>
-
-          <button className="md:hidden relative p-2 text-muted-foreground hover:text-foreground transition-colors">
-            <Icon name="Bell" size={20} />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
+          <button className="md:hidden p-2 text-white/70 hover:text-white transition-colors">
+            <Icon name="Menu" size={22} />
           </button>
         </div>
       </header>
@@ -232,33 +218,32 @@ export default function Index() {
             {/* Hero */}
             <section className="relative min-h-[92vh] flex items-center overflow-hidden">
               <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${IMG_HERO})` }} />
-              <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-              <div className="relative z-10 max-w-6xl mx-auto px-4 w-full">
-                <div className="max-w-xl animate-slide-up">
-                  <div className="inline-flex items-center gap-2 glass px-3 py-1.5 rounded-full text-xs text-primary mb-6">
-                    <span className="w-2 h-2 bg-primary rounded-full pulse-neon" />
-                    Открыто · Пн-Чт до 03:00 · Пт-Сб до 05:00
+              <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+                <div className="max-w-2xl animate-slide-up">
+                  <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full text-xs text-primary mb-8">
+                    <span className="w-2 h-2 bg-primary rounded-full" />
+                    Открыто до 03:00
                   </div>
 
-                  <h1 className="font-display font-bold text-5xl md:text-7xl leading-none tracking-tight mb-5">
-                    БАР С ПОНЯТНОЙ<br />
-                    <span className="gradient-text">ЕДОЙ, ТАНЦАМИ</span><br />
-                    И ОСОБОЙ КУЛЬТУРОЙ
+                  <h1 className="font-display font-black leading-none tracking-tight mb-5" style={{ fontSize: "clamp(4rem, 12vw, 9rem)" }}>
+                    ТВОЁ<br />
+                    <span className="gradient-text">МЕСТО</span>
                   </h1>
 
-                  <p className="text-base text-muted-foreground mb-8 leading-relaxed max-w-md">
-                    Место, где днём можно поработать, съесть комплексный обед, а вечером получить удовольствие от ярких блюд или потанцевать
+                  <p className="text-lg text-white/70 mb-10 leading-relaxed max-w-md">
+                    Авторская кухня, крафтовые коктейли<br />и атмосфера, которую хочется повторить
                   </p>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-4">
                     <button onClick={() => go("booking" as Section)}
-                      className="px-8 py-3.5 rounded-xl font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all duration-200 neon-glow-orange font-display tracking-wide">
-                      Забронировать столик
+                      className="px-8 py-4 font-display font-bold text-base text-black bg-primary hover:bg-primary/90 transition-all duration-200 tracking-wide">
+                      Забронировать стол
                     </button>
                     <button onClick={() => go("menu")}
-                      className="px-8 py-3.5 rounded-xl font-semibold glass border border-white/15 hover:border-primary/40 transition-all duration-200">
+                      className="px-8 py-4 font-display font-bold text-base text-white bg-white/10 border border-white/20 hover:bg-white/15 transition-all duration-200 tracking-wide">
                       Смотреть меню
                     </button>
                   </div>
@@ -366,7 +351,7 @@ export default function Index() {
                 <p className="text-muted-foreground mb-2">Хотите забронировать столик? Оставьте свои контакты и мы с вами свяжемся.</p>
                 <p className="text-primary text-sm mb-8 font-medium">Информация по телефону: +7 (960) 179-09-89</p>
                 <button onClick={() => go("booking" as Section)}
-                  className="px-10 py-4 rounded-xl font-display font-semibold text-xl text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+                  className="px-10 py-4 font-display font-bold text-xl text-black bg-primary hover:bg-primary/90 transition-all">
                   ЗАБРОНИРОВАТЬ
                 </button>
               </div>
@@ -554,7 +539,7 @@ export default function Index() {
             </div>
 
             <button onClick={() => go("booking" as Section)}
-              className="w-full py-4 rounded-xl font-display font-semibold text-xl text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+              className="w-full py-4 font-display font-bold text-xl text-black bg-primary hover:bg-primary/90 transition-all">
               ЗАБРОНИРОВАТЬ СТОЛИК
             </button>
           </div>
@@ -684,7 +669,7 @@ export default function Index() {
                 ))}
 
                 <a href="tel:+79601790989"
-                  className="flex items-center justify-center gap-3 py-4 rounded-2xl font-display font-semibold text-lg text-primary-foreground bg-primary hover:bg-primary/90 transition-all neon-glow-orange">
+                  className="flex items-center justify-center gap-3 py-4 font-display font-bold text-lg text-black bg-primary hover:bg-primary/90 transition-all">
                   <Icon name="Phone" size={20} />
                   +7 (960) 179-09-89
                 </a>
@@ -790,7 +775,7 @@ export default function Index() {
             <div className="mt-10 glass rounded-2xl p-6 border border-primary/15 text-center">
               <p className="text-muted-foreground mb-2">Хотите заказать столик?</p>
               <button onClick={() => go("booking" as Section)}
-                className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all neon-glow-orange text-sm">
+                className="px-6 py-3 bg-primary text-black font-bold hover:bg-primary/90 transition-all text-sm">
                 Забронировать →
               </button>
             </div>
@@ -873,7 +858,7 @@ export default function Index() {
 
                 <button onClick={() => { if (bDate && bName && bPhone) setBSuccess(true); }}
                   disabled={!bDate || !bName || !bPhone}
-                  className="w-full py-4 rounded-xl font-display font-semibold text-xl tracking-wide text-primary-foreground bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 neon-glow-orange">
+                  className="w-full py-4 font-display font-bold text-xl tracking-wide text-black bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
                   ЗАБРОНИРОВАТЬ СТОЛИК
                 </button>
               </div>
